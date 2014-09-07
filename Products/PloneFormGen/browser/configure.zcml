@@ -53,6 +53,14 @@
     template="quickedit.pt"
     permission="cmf.ModifyPortalContent"
     />
+    
+  <browser:page
+    for="Products.PloneFormGen.interfaces.IPloneFormGenForm"
+    class=".skiplogic.SkipLogicView"
+    name="skiplogic"
+    template="skiplogic.pt"
+    permission="cmf.ModifyPortalContent"
+    />
 
   <browser:page
       for="*"

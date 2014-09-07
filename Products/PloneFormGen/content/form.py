@@ -45,6 +45,8 @@ from Products.PloneFormGen import PloneFormGenMessageFactory as _
 
 from types import StringTypes
 
+import json
+
 import zope.i18n
 
 logger = logging.getLogger("PloneFormGen")
@@ -279,6 +281,29 @@ FormFolderSchema = ATFolderSchema.copy() + Schema((
             """),
             ),
         ),
+    BooleanField('skipLogicEnabled',
+        required=False,
+        default=False,
+        schemata='default',
+        widget = BooleanWidget(
+            label=_(u'label_enableskiplogic_text', default=u'Enable Skip Logic?'),
+            description=_(u'help_enableskiplogic_text', default=u''),
+            visible = {"edit": "visible", "view": "invisible"},
+            ),
+        ),
+    StringField('skipLogicConfig',
+        required=False,
+        schemata='default',
+        widget=StringWidget(
+            label=_(u'label_configskiplogic_text', default=u"Skip Logic Configuration"),
+            description=_(u'help_configskiplogic_text', default=u"""
+                This field is where the skip logic configuration JSON string goes. 
+                The string is generated using the UI and inserted into this field.
+            """),
+            visible = {"edit": "invisible", "view": "invisible"},
+            ),
+        searchable=False,
+    ),    
     ))
 
 NO_TRAVERSE = (
@@ -1101,5 +1126,9 @@ class FormFolder(ATFolder):
             lastField = myFields[-1].id
         return lastField
 
+    def getSkipLogicJSON(self):
+        sl = self.getSkipLogicConfig()
+        if len(sl)>0:
+            return json.loads(sl[0])
 
 registerATCT(FormFolder, PROJECTNAME)
